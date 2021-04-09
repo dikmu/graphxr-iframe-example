@@ -21,72 +21,16 @@
             overflow: hidden;
             margin: 0;
             padding: 0;
-         }
+        }
 
         iframe {
-            position: fixed;
-            left: 40%;
             height: 100%;
-            width: 60%;
-            border: none;
-            overflow: hidden;
-        }
-
-        .header {
-            position: fixed;
-            left: 0;
-            height: 100%;
-            width: 40%;
-            border: none;
-            overflow: hidden;
-        }
-
-             .header > div{
-
-            float:left;
-             }
-
-        .header .code {
-            width: 80%;
-            height: 100%;
-        }
-
-        .header textarea {
-            width: 96%;
-            padding:2%;
-            border-radius: 0px;
-            height: 96%;
-            color: #222222;
-            font-size: 18px;
-        }
-
-        .header .actions{
-            width:18%;
-            padding: 1%;
-            height: 100%;
-        }
-
-        .header .btn {
             width: 100%;
-            cursor: pointer;
-            text-align: center;
-            height: 60px;
-            line-height: 60px;
-            margin:20px 1%;
-            border-radius: 4px;
-            color: white;
-            background-color:green;
+            border: none;
+            overflow: hidden;
         }
 
-        .header a.help{
-            display: block;
-            text-align: center;
-            font-size: 32px;
-            color: black;
-            border: none;
-            text-decoration: none;
-            background-color: white;
-        }
+
     </style>
 
     <!--Please -->
@@ -97,50 +41,51 @@
 <body>
 
 
-    <div class="header">
-        <div class="code">
-            <textarea id='code-area'>
-/*
-Create a project ,from Project=>Data, create a view enable share 
-from the project window by clicking on the lock icon
-Get the shared view link, for example, here is a link for VC data set:
-https://graphxr.kineviz.com/share/5c633dfe197b00001e855294/VC%20investment%202004-2013/5c65e7be851f2c0036ef27c9
+<!--<div class="header">-->
+<!--    <div class="code">-->
+<!--            <textarea id='code-area'>-->
+<!--/*-->
+<!--Create a project ,from Project=>Data, create a view enable share -->
+<!--from the project window by clicking on the lock icon-->
+<!--Get the shared view link, for example, here is a link for VC data set:-->
+<!--https://graphxr.kineviz.com/share/5c633dfe197b00001e855294/VC%20investment%202004-2013/5c65e7be851f2c0036ef27c9-->
 
-*/
-let iframeElem = document.getElementById("injection-graphXR-iframe-id");
+<!--*/-->
+<!--let iframeElem = document.getElementById("injection-graphXR-iframe-id");-->
 
-graphXR.injectionApiCommand(':getGraph', iframeElem)
-.then((resData) => {
-    alert(JSON.stringify(resData,null,2));
-    //please open develop tool and goto console, search with "Receive graphData"
-    console.warn("Receive graphData:", resData.content)
-})
+<!--graphXR.injectionApiCommand(':getGraph', iframeElem)-->
+<!--.then((resData) => {-->
+<!--    alert(JSON.stringify(resData,null,2));-->
+<!--    //please open develop tool and goto console, search with "Receive graphData"-->
+<!--    console.warn("Receive graphData:", resData.content)-->
+<!--})-->
 
-       </textarea>
-        </div>
-        <div class="actions">
-            <div class="btn" onclick="handleClick()" title="run the code"> RUN </div>
-            <a class="help" target="_blank"
-            href="https://github.com/Kineviz/graphxr-iframe-example#1-apicommand" 
-            title="api help"> ? </a>
-         </div>
-    </div>
-   
+<!--       </textarea>-->
+<!--    </div>-->
+<!--    <div class="actions">-->
+<!--        <div class="btn" onclick="handleClick()" title="run the code"> RUN</div>-->
+<!--        <a class="help" target="_blank"-->
+<!--           href="https://github.com/Kineviz/graphxr-iframe-example#1-apicommand"-->
+<!--           title="api help"> ? </a>-->
+<!--    </div>-->
+<!--</div>-->
 
-<iframe id="injection-graphXR-iframe-id"  origin="*" > </iframe>
+
+<iframe id="injection-graphXR-iframe-id" origin="*"></iframe>
 
 <script id="script" type="text/javascript">
     let getQueryString = function (name) {
-           let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-           let r = window.location.search.substr(1).match(reg);
-           if (r != null) return unescape(r[2]); return null;
-       }
-       let defaultEmbedGraphURL = 'https://graphxr.kineviz.com/share/5fad3be86fd8dd0068f8c833/Russian%20Troll%20Tweets%20/5fad3cc86fd8dd0068f8c8d4/Russian-troll-tweets'
-       let iframe = document.getElementById('injection-graphXR-iframe-id');
-       iframe.setAttribute('src', getQueryString('embedGraphURL') || getQueryString('url') || iframe.getAttribute('src') ||  defaultEmbedGraphURL);
-   </script>
+        let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        let r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
 
-<script id="script" type="text/javascript">
+    let defaultEmbedGraphURL = 'http://10.6.80.6/share/601ceafb91b9cf00627f6e52/%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8'
+    let iframeElem = document.getElementById('injection-graphXR-iframe-id');
+
+    iframeElem.setAttribute('src', getQueryString('embedGraphURL') || getQueryString('url') || iframeElem.getAttribute('src') || defaultEmbedGraphURL);
+
     let handleClick = function () {
         try {
             eval(document.getElementById("code-area").value);
@@ -148,6 +93,98 @@ graphXR.injectionApiCommand(':getGraph', iframeElem)
             alert(error.message);
         }
     }
+
+    if (iframeElem.attachEvent) {
+        iframeElem.attachEvent("onload", function () {
+            alert("Local iframe is now loaded.");
+        });
+    } else {
+        iframeElem.onload = function () {
+            setTimeout(execFunc, 3000);
+        };
+    }
+
+    function execFunc() {
+        let bizId = getQueryString("bizId");
+        let name = getQueryString("name");
+        let cyper;
+        if (bizId != null) {
+            // cyper="match p=(n1)-[*0..]->(n2) -[*0..]->(n3) WHERE n2.bizId='871f0426e4ed4a238b67e2d2765e7673' return p limit 1000";
+            cyper = "match p=(n1)-[*0..]->(n2) -[*0..]->(n3) WHERE n2.bizId='" + bizId + "' OR n1.bizId='" + bizId + "'OR n3.bizId='" + bizId + "' return p limit 1000";
+        } else if (name != null) {
+            cyper = "match p=(n1)-[*0..]->(n2) -[*0..]->(n3) WHERE n2.name='" + name + "' OR n1.name='" + name + "'OR n3.name='" + name + "' return p limit 1000";
+        }
+
+        if (cyper) {
+            console.log("--------------------------------cyper:" + cyper);
+            let _GXRID;
+            graphXR.injectionApiCommand(cyper, iframeElem)
+                .then((resData) => {
+                    console.log("--------------------------------Receive query data:" + resData)
+                    //focus
+                    // setTimeout(function () {
+                    //     graphXR.injectionApiFunc("flyTo", bizId, iframeElem);
+                    // }, 1000);
+                    //
+                    //获取当前所有点位
+                    console.log(resData.content)
+                    if (resData.content != null && resData.content.length > 0) {
+                        for (let i = 0; i < resData.content.nodes.length; i++) {
+                            let node = resData.content.nodes[i];
+                            if (node.bizId == bizId) {
+                                //_GXRID
+                                _GXRID = node._GXRID;
+                                //
+                                graphXR.injectionApiFunc("flyTo", _GXRID , iframeElem);
+                            }
+                        }
+                    }
+                })
+
+        }
+
+    }
+
+    // //获取当前所有点位
+    // graphXR.injectionApiCommand(':getGraph', iframeElem)
+    //     .then((resData) => {
+    //         console.warn("Receive graphData:", resData.content)
+    //     })
+
+    // // 获取参数
+    // function getQueryString(name) {
+    //     var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+    //     var r = window.location.search.substr(1).match(reg);
+    //     if (r != null) {
+    //         return unescape(r[2]);
+    //     }
+    //     return null;
+    // }
+
+
+    //清空
+    // graphXR.injectionApiCommand(':clearGraph', iframeElem)
+    //     .then((resData) => {
+    //         console.warn("Receive clearGraph:", resData.content)
+    //     })
+
+    //执行语句
+    // graphXR.injectionApiCommand('MATCH (n)-[r]-(m) RETURN * LIMIT 100', iframeElem)
+    //     .then((resData) => {
+    //         console.warn("Receive query data:", resData.content)
+    //     })
+
+    //监听节点选择事件
+    // graphXR.injectionOn("select", () => {
+    //     console.warn("receive select event")
+    //     //please use :selected got all selected nodes
+    //     graphXR.injectionApiCommand(':selected', iframeElem)
+    //         .then((resData) => {
+    //             console.warn("-----------------Receive selected:", resData.content)
+    //         })
+    // }, iframeElem, "iframe-unique-name")
+
+    // GraphXR.injectionApiFunc("flyTo", flytoNode._GXRID, IframeElem);
 </script>
 
 </body>
